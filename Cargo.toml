@@ -1,6 +1,6 @@
 [package]
 authors = ["Sean Leffler <sean@errno.com>"]
-name = "peony-rs"
+name = "peony"
 version = "0.1.0"
 
 [dependencies]
