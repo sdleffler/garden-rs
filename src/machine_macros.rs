@@ -15,7 +15,6 @@ macro_rules! match_sp0 {
     }
 }
 
-
 #[macro_export]
 macro_rules! match_sp2 {
     ($sp2:expr; with $self:ident { $src:ident, $dst0:ident, $dst1:ident } => $out:expr) => {
@@ -66,7 +65,6 @@ macro_rules! match_sp2 {
     }
 }
 
-
 #[macro_export]
 macro_rules! match_op0_and_inc_pc {
     ($op0:expr; with $self:ident { } => $out:expr) => {
@@ -88,7 +86,6 @@ macro_rules! match_op0_and_inc_pc {
         }
     }
 }
-
 
 #[macro_export]
 macro_rules! match_op1_and_inc_pc {
@@ -135,7 +132,6 @@ macro_rules! match_op1_and_inc_pc {
         }
     }
 }
-
 
 /// 3 ways - pick C L or R. 3 ways again - pick C L or R. Then 2 ways - pick L or R.
 /// Quotient: no double C.

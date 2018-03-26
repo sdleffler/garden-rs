@@ -3,12 +3,10 @@ use std::mem;
 
 use tag::Tag;
 
-
 #[cfg(target_endian = "little")]
 pub fn f64_to_u32s(f: f64) -> [u32; 2] {
     unsafe { mem::transmute::<f64, [u32; 2]>(f) }
 }
-
 
 #[cfg(target_endian = "big")]
 pub fn f64_to_u32s(f: f64) -> [u32; 2] {
@@ -18,12 +16,10 @@ pub fn f64_to_u32s(f: f64) -> [u32; 2] {
     }
 }
 
-
 #[cfg(target_endian = "little")]
 pub fn u32s_to_f64(a: [u32; 2]) -> f64 {
     unsafe { mem::transmute::<[u32; 2], f64>(a) }
 }
-
 
 #[cfg(target_endian = "big")]
 pub fn u32s_to_f64(a: [u32; 2]) -> f64 {
@@ -33,14 +29,12 @@ pub fn u32s_to_f64(a: [u32; 2]) -> f64 {
     }
 }
 
-
 pub type Function = u32;
 pub type Signed = i32;
 pub type Unsigned = u32;
 pub type Atom = u32;
 pub type Pointer = u32;
 pub type Prompt = u32;
-
 
 pub trait Word: Sized + Clone + Copy + Debug + PartialEq + Eq + Default {
     fn tag(&self) -> Tag;
@@ -104,35 +98,29 @@ pub trait Word: Sized + Clone + Copy + Debug + PartialEq + Eq + Default {
         Word::pack(&UnpackedWord::ValHeap(ptr))
     }
 
-
     fn from_list(ptr: Pointer) -> Self {
         Word::pack(&UnpackedWord::ValCons(ptr))
     }
-
 
     fn from_float(ptr: Pointer) -> Self {
         Word::pack(&UnpackedWord::ValFloat(ptr))
     }
 
-
     fn from_boxed(ptr: Pointer) -> Self {
         Word::pack(&UnpackedWord::ValBoxed(ptr))
     }
-
 
     fn unpack(&self) -> UnpackedWord;
     fn pack(&UnpackedWord) -> Self;
 }
 
-
 #[repr(u8)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Primitive)]
 pub enum Special {
-    Nil   = 0b00,
+    Nil = 0b00,
     False = 0b01,
-    True  = 0b11,
+    True = 0b11,
 }
-
 
 #[repr(u8)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -157,13 +145,11 @@ pub enum UnpackedWord {
     RawWord(u32),
 }
 
-
 impl Default for UnpackedWord {
     fn default() -> UnpackedWord {
         UnpackedWord::ValSpecial(Special::Nil)
     }
 }
-
 
 impl Word for UnpackedWord {
     fn tag(&self) -> Tag {
@@ -188,26 +174,59 @@ impl Word for UnpackedWord {
         }
     }
 
-    fn raw_u32(u: u32) -> UnpackedWord { UnpackedWord::RawWord(u) }
+    fn raw_u32(u: u32) -> UnpackedWord {
+        UnpackedWord::RawWord(u)
+    }
 
-    fn val_integer(i: Signed) -> UnpackedWord { UnpackedWord::ValInt(i) }
-    fn val_atom(a: Atom) -> UnpackedWord { UnpackedWord::ValAtom(a) }
-    fn val_special(s: Special) -> UnpackedWord { UnpackedWord::ValSpecial(s) }
-    fn val_heap(p: Pointer) -> UnpackedWord { UnpackedWord::ValHeap(p) }
-    fn val_list(p: Pointer) -> UnpackedWord { UnpackedWord::ValCons(p) }
-    fn val_float(p: Pointer) -> UnpackedWord { UnpackedWord::ValFloat(p) }
-    fn val_boxed(p: Pointer) -> UnpackedWord { UnpackedWord::ValBoxed(p) }
-    fn val_function(a: u32) -> UnpackedWord { UnpackedWord::ValFunction(a) }
+    fn val_integer(i: Signed) -> UnpackedWord {
+        UnpackedWord::ValInt(i)
+    }
+    fn val_atom(a: Atom) -> UnpackedWord {
+        UnpackedWord::ValAtom(a)
+    }
+    fn val_special(s: Special) -> UnpackedWord {
+        UnpackedWord::ValSpecial(s)
+    }
+    fn val_heap(p: Pointer) -> UnpackedWord {
+        UnpackedWord::ValHeap(p)
+    }
+    fn val_list(p: Pointer) -> UnpackedWord {
+        UnpackedWord::ValCons(p)
+    }
+    fn val_float(p: Pointer) -> UnpackedWord {
+        UnpackedWord::ValFloat(p)
+    }
+    fn val_boxed(p: Pointer) -> UnpackedWord {
+        UnpackedWord::ValBoxed(p)
+    }
+    fn val_function(a: u32) -> UnpackedWord {
+        UnpackedWord::ValFunction(a)
+    }
 
-    fn hdr_raw(u: Unsigned) -> UnpackedWord { UnpackedWord::HdrRaw(u) }
-    fn hdr_float() -> UnpackedWord { UnpackedWord::HdrFloat }
-    fn hdr_vector(u: Unsigned) -> UnpackedWord { UnpackedWord::HdrVector(u) }
-    fn hdr_record(a: Atom) -> UnpackedWord { UnpackedWord::HdrRecord(a) }
-    fn hdr_closure(e: Unsigned) -> UnpackedWord { UnpackedWord::HdrClosure(e) }
-    fn hdr_continuation(a: u8, r: u8, n: bool, l: u16) -> UnpackedWord { UnpackedWord::HdrContinuation(a, r, n, l) }
-    fn hdr_prompt() -> UnpackedWord { UnpackedWord::HdrPrompt }
-    fn hdr_moved(p: Pointer) -> UnpackedWord { UnpackedWord::HdrMoved(p) }
-
+    fn hdr_raw(u: Unsigned) -> UnpackedWord {
+        UnpackedWord::HdrRaw(u)
+    }
+    fn hdr_float() -> UnpackedWord {
+        UnpackedWord::HdrFloat
+    }
+    fn hdr_vector(u: Unsigned) -> UnpackedWord {
+        UnpackedWord::HdrVector(u)
+    }
+    fn hdr_record(a: Atom) -> UnpackedWord {
+        UnpackedWord::HdrRecord(a)
+    }
+    fn hdr_closure(e: Unsigned) -> UnpackedWord {
+        UnpackedWord::HdrClosure(e)
+    }
+    fn hdr_continuation(a: u8, r: u8, n: bool, l: u16) -> UnpackedWord {
+        UnpackedWord::HdrContinuation(a, r, n, l)
+    }
+    fn hdr_prompt() -> UnpackedWord {
+        UnpackedWord::HdrPrompt
+    }
+    fn hdr_moved(p: Pointer) -> UnpackedWord {
+        UnpackedWord::HdrMoved(p)
+    }
 
     fn as_raw_u32(&self) -> Option<u32> {
         use self::UnpackedWord::*;
@@ -218,7 +237,6 @@ impl Word for UnpackedWord {
         }
     }
 
-
     fn as_integer(&self) -> Option<Signed> {
         use self::UnpackedWord::*;
 
@@ -227,7 +245,6 @@ impl Word for UnpackedWord {
             _ => None,
         }
     }
-
 
     fn as_heap_ptr(&self) -> Option<Pointer> {
         use self::UnpackedWord::*;
@@ -238,7 +255,6 @@ impl Word for UnpackedWord {
         }
     }
 
-
     fn as_list_ptr(&self) -> Option<Pointer> {
         use self::UnpackedWord::*;
 
@@ -248,18 +264,14 @@ impl Word for UnpackedWord {
         }
     }
 
-
     fn as_pointer(&self) -> Option<Pointer> {
         use self::UnpackedWord::*;
 
         match *self {
-            ValHeap(p) | ValCons(p) | ValFloat(p) |  ValBoxed(p) | HdrMoved(p) => {
-                Some(p)
-            }
+            ValHeap(p) | ValCons(p) | ValFloat(p) | ValBoxed(p) | HdrMoved(p) => Some(p),
             _ => None,
         }
     }
-
 
     fn as_special(&self) -> Option<Special> {
         use self::UnpackedWord::*;
@@ -270,7 +282,6 @@ impl Word for UnpackedWord {
         }
     }
 
-
     fn as_boxed_ptr(&self) -> Option<Pointer> {
         use self::UnpackedWord::*;
 
@@ -279,7 +290,6 @@ impl Word for UnpackedWord {
             _ => None,
         }
     }
-
 
     fn as_function_ptr(&self) -> Option<Function> {
         use self::UnpackedWord::*;
@@ -290,7 +300,6 @@ impl Word for UnpackedWord {
         }
     }
 
-
     fn as_hdr_continuation(&self) -> Option<(u8, u8, bool, u16)> {
         use self::UnpackedWord::*;
 
@@ -300,10 +309,13 @@ impl Word for UnpackedWord {
         }
     }
 
-    fn unpack(&self) -> UnpackedWord { *self }
-    fn pack(w: &UnpackedWord) -> Self { *w }
+    fn unpack(&self) -> UnpackedWord {
+        *self
+    }
+    fn pack(w: &UnpackedWord) -> Self {
+        *w
+    }
 }
-
 
 #[derive(Clone, Copy)]
 pub struct MachineWord(u32);

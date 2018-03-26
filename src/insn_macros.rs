@@ -3,7 +3,6 @@ macro_rules! bamboozle {
     ($victim:tt $lol:expr) => { $lol };
 }
 
-
 #[macro_export]
 macro_rules! bamboozle_insn {
     (( $($stuff:tt)* )) => { 1 };
@@ -11,12 +10,10 @@ macro_rules! bamboozle_insn {
     ($label:ident) => { 0 };
 }
 
-
 #[macro_export]
 macro_rules! count_insns {
     ($($insn:tt)*) => {{ 0 $(+ bamboozle_insn!($insn))* }};
 }
-
 
 #[macro_export]
 macro_rules! count_names {
@@ -24,7 +21,6 @@ macro_rules! count_names {
     (($($insn:tt),*)) => {{ 0 $(+ bamboozle!($insn 1))* }};
     ($($insn:tt),*) => {{ 0 $(+ bamboozle!($insn 1))* }};
 }
-
 
 #[macro_export]
 macro_rules! function_info {
@@ -47,7 +43,6 @@ macro_rules! function_info {
     };
 }
 
-
 #[macro_export]
 macro_rules! splat_alias {
     ($t:ty => ($($reg:tt),*)) => {
@@ -63,7 +58,6 @@ macro_rules! splat_alias {
     };
 }
 
-
 #[macro_export]
 macro_rules! splat_label {
     (@bamboozle $c:ident ($($stuff:tt)*)) => { $c += 1; };
@@ -75,7 +69,6 @@ macro_rules! splat_label {
     };
 }
 
-
 #[macro_export]
 macro_rules! parse_const {
     (true) => { $crate::word::Word::val_boolean(true) };
@@ -83,7 +76,6 @@ macro_rules! parse_const {
     (()) => { $crate::word::Word::val_special($crate::word::Special::Nil) };
     ($n:expr) => { $crate::word::Word::val_integer($n as $crate::word::Signed) };
 }
-
 
 #[macro_export]
 macro_rules! parse_src {
@@ -93,20 +85,17 @@ macro_rules! parse_src {
     (#$src:tt) => { $crate::insn::Src::R($src) };
 }
 
-
 #[macro_export]
 macro_rules! parse_dst {
     (%$src:tt) => { $crate::insn::Dst::L($src) };
     (#$src:tt) => { $crate::insn::Dst::R($src) };
 }
 
-
 #[macro_export]
 macro_rules! parse_trg {
     (:$lab:expr) => { $crate::insn::Trg::Absolute($lab) };
     (|$off:expr) => { $crate::insn::Trg::Relative($off) };
 }
-
 
 #[macro_export]
 macro_rules! parse_insn {
@@ -130,14 +119,12 @@ macro_rules! parse_insn {
     ($tok0:tt $src0:tt >= $tok1:tt $src1:tt -> $dtk:tt $dst:tt) => { $crate::insn::UnpackedInsn::CmpIntGe { src0: parse_src!($tok0 $src0), src1: parse_src!($tok1 $src1), dst: parse_dst!($dtk $dst) } };
 }
 
-
 #[macro_export]
 macro_rules! pre_parse_insn {
     ($prog:ident ($($nobamboozle:tt)*)) => { $prog.push($crate::insn::Insn::pack(&parse_insn!($($nobamboozle)*))); }; // no bamboozle
     ($prog:ident :) => {}; // Label colon - ignore
     ($prog:ident $bamboozle:ident) => {}; // Label name - ignore
 }
-
 
 #[macro_export]
 macro_rules! splat_insns {
@@ -150,7 +137,6 @@ macro_rules! splat_insns {
         $(pre_parse_insn!($prog $insn);)*
     }
 }
-
 
 #[macro_export]
 macro_rules! program {
@@ -167,62 +153,3 @@ macro_rules! program {
         }
     };
 }
-
-// trace_macros!(true);
-
-#[cfg(test)]
-mod test {
-    use insn::{FunctionInfo, Insn, Program};
-
-    // #[allow(unused_assignments, unused_variables, unused_mut)]
-    // fn factorial_program<I: Insn>() -> Program<I> {
-    //     program! {
-    //         fn fac(n) -> res [] {
-    //             (move #n => #1)
-    //             (call @fac_rec)
-    //         }
-
-    //         fn fac_rec(n, accum) -> res [] {
-    //         :ck (#n <= &1 => #2)
-    //             (jmpif #2 :re)
-    //             (#n * #accum => #accum)
-    //             (#n - &1 => #n)
-    //             (jmp :ck)
-    //         :re (move #accum => #res)
-    //             (ret)
-    //         }
-    //     }
-    // }
-
-
-    // #[test]
-    // fn assemble_factorial() {
-    //     let prog = Program {
-    //         fns: [
-    //             FunctionInfo { addr: 0, args: 1, rets: 1, locals: 0 },
-    //             FunctionInfo { addr: 2, args: 2, rets: 1, locals: 0 }
-    //         ],
-    //         code: [
-    //             Move1(RR { src: 0, dst: 1 }),
-    //             CallStatic { addr: 2 },
-    //             IntSub(RC { src0: 0, src1: ValInt(1), dst: 2 }),
-    //             JmpIf(2, 7),
-    //             IntMul(RR { src0: 0, src1: 1, dst: 1 }),
-    //             IntSub(RC { src0: 0, src1: ValInt(1), dst: 0 }),
-    //             Jmp(2),
-    //             Move1(RR { src: 1, dst: 0 }),
-    //             Return
-    //         ]
-    //     };
-    // }
-
-
-    // #[test]
-    // fn factorial() {
-    //     let prog: Program<SafeWord> = factorial_program();
-    //     println!("{:?}", prog);
-    //     panic!("Show me the money!");
-    // }
-}
-
-// trace_macros!(false);

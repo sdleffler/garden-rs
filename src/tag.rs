@@ -65,14 +65,14 @@ impl From<ValueTag> for Tag {
 #[repr(u8)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Primitive)]
 pub enum HeaderTag {
-    HdrRaw          = 0b1000,
-    HdrFloat        = 0b1001,
-    HdrVector       = 0b1010,
-    HdrRecord       = 0b1011,
-    HdrClosure      = 0b1100,
+    HdrRaw = 0b1000,
+    HdrFloat = 0b1001,
+    HdrVector = 0b1010,
+    HdrRecord = 0b1011,
+    HdrClosure = 0b1100,
     HdrContinuation = 0b1101,
-    HdrPrompt       = 0b1110,
-    HdrMoved        = 0b1111,
+    HdrPrompt = 0b1110,
+    HdrMoved = 0b1111,
 }
 
 impl From<HeaderTag> for Tag {
