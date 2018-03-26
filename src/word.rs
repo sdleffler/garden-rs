@@ -312,10 +312,8 @@ impl Word for UnpackedWord {
     fn unpack(&self) -> UnpackedWord {
         *self
     }
+
     fn pack(w: &UnpackedWord) -> Self {
         *w
     }
 }
-
-#[derive(Clone, Copy)]
-pub struct MachineWord(u32);
